@@ -1,50 +1,83 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import "~/styles/global.css";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import Timeline from "../components/react/timeline";
+import { DevLogos } from "~/components/react/dev-logos";
+import TsHeart from "~/assets/ts-heart.svg.astro";
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+<html lang="en" class="antialiased transition-all">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body class="bg-slate-950 font-semibold text-gray-50">
+    <Header />
+    <main class="flex flex-col gap-4 px-8">
+      <section class="flex min-h-screen flex-col items-center gap-4">
+        <img
+          alt="Gabriel Bianchi"
+          class="size-16 rounded-full"
+          src="https://github.com/dbianchii.png"
+        />
+        <h1 class="text-3xl font-bold">Gabriel Bianchi</h1>
+        <h2 class="text-3xl font-bold">Full stack Web developer</h2>
+        <DevLogos client:load />
+        <div></div>
+        <p class="text-gray-50/50">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Soluta nisi
+          accusantium repellat qui deleniti. Voluptate deleniti doloremque
+          perspiciatis debitis, voluptatum necessitatibus vel consequatur nisi
+          maiores eos dicta tempora voluptatibus maxime, tempore ratione harum
+          temporibus enim dolorum laudantium ipsam sit blanditiis, illo aut?
+          Saepe assumenda beatae harum. Autem ab provident magnam ipsa, odio,
+          ipsam aliquam est iste dolores dolorum culpa dignissimos vero
+          reprehenderit eos molestiae quis voluptas voluptates eaque cumque
+          officiis dicta eum deleniti velit doloribus? A, quas modi dolorum
+          porro dolorem voluptate quisquam doloremque delectus voluptas, minus
+          harum ratione nihil corrupti quasi amet quibusdam earum. Numquam earum
+          ad fugiat corrupti rem, consequatur enim suscipit illum fugit incidunt
+          laborum minima temporibus expedita placeat est itaque nulla vero culpa
+          dolore. Consequatur quaerat aperiam facere recusandae. Placeat
+          incidunt at nobis suscipit! Ipsa laboriosam veritatis consectetur
+          ducimus voluptate ad. Fugit, animi sint. Voluptas quisquam, non, omnis
+          id eos voluptatem incidunt laborum veritatis qui nulla ratione,
+          expedita nam. Culpa voluptatibus dolores ratione aperiam et fuga ipsum
+          temporibus hic, odit eos excepturi unde similique ab repudiandae
+          aliquid enim, provident autem corrupti earum eius facere accusamus
+          repellat voluptates? Adipisci aliquid natus non necessitatibus
+          mollitia optio tempore quia omnis reiciendis voluptatem veritatis,
+          dolore voluptates fugit sapiente, asperiores ratione tempora. Sapiente
+          assumenda quibusdam id. Ducimus debitis, odio dignissimos quibusdam
+          quas excepturi nisi saepe provident laborum itaque neque dolore
+          voluptates reprehenderit suscipit facilis quae iusto sed aut
+          perspiciatis. Dolorem quis eos, sit explicabo ab, nihil placeat quidem
+          quisquam quos aperiam laboriosam necessitatibus id! Dicta maiores est
+          mollitia. Enim repellendus, perspiciatis totam sint eligendi possimus!
+          Ut minima atque inventore est nobis vel incidunt commodi fuga impedit
+          dolorum quo praesentium a consequuntur id, aliquid ipsum aliquam
+          necessitatibus, eius facilis debitis. Voluptate vel unde recusandae
+          aperiam, dolorem nobis quas nisi necessitatibus ab ducimus repellat
+          tempore dolores provident reprehenderit dolor sunt illum harum
+          corrupti ipsum at voluptates pariatur sed similique impedit? Assumenda
+          molestias, architecto porro voluptates veniam amet delectus aut quae
+          soluta pariatur. Incidunt temporibus at voluptatum animi quo fugit
+          velit quos molestias asperiores quis, dolorem vitae libero reiciendis!
+          Magni ipsa incidunt tempore iusto consequuntur dolore aliquid fugiat
+          deleniti iure veniam praesentium perspiciatis nostrum impedit
+          distinctio consequatur modi quae non, ducimus maiores et error? Iste
+          non rerum odio maxime et, repellendus corporis reiciendis doloribus
+          asperiores voluptatum? Quas soluta cumque quasi aut sapiente nulla
+          quam odit assumenda amet, et illo expedita aspernatur libero ab
+          aliquid dicta ex velit necessitatibus voluptatum? Nisi quam quibusdam
+          sint cum.
+        </p>
+      </section>
+      <Timeline client:load />
+    </main>
+    <Footer />
+  </body>
 </html>
