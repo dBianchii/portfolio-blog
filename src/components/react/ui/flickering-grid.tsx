@@ -14,7 +14,6 @@ interface FlickeringGridProps {
   width?: number;
   height?: number;
   className?: string;
-
   maxOpacity?: number;
 }
 

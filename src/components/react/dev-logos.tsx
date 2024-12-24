@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "~/components/react/ui/tooltip";
+import { Dock, DockIcon } from "./ui/dock";
 
 const logos = [
   {
@@ -45,26 +46,29 @@ const logos = [
     key: "Turborepo",
   },
 ];
-
+const size = 60;
 export function DevLogos() {
   return (
     <div className="flex gap-8 text-lg text-gray-50/50">
       <TooltipProvider>
-        {logos.map(({ Component, key }, i) => (
-          <Tooltip delayDuration={50} key={key + i}>
-            <TooltipTrigger asChild>
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                className="transition-colors"
-              >
-                {Component}
-              </motion.div>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p>{key}</p>
-            </TooltipContent>
-          </Tooltip>
-        ))}
+        <Dock
+          className="border-slate-800"
+          direction="middle"
+          iconMagnification={size * 1.4}
+          iconDistance={20}
+          iconSize={size}
+        >
+          {logos.map(({ Component, key }, i) => (
+            <DockIcon>
+              <Tooltip delayDuration={50} key={key + i}>
+                <TooltipTrigger asChild>{Component}</TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>{key}</p>
+                </TooltipContent>
+              </Tooltip>
+            </DockIcon>
+          ))}
+        </Dock>
       </TooltipProvider>
     </div>
   );

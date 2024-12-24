@@ -7,6 +7,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 import Timeline from "../components/react/timeline";
 import { DevLogos } from "~/components/react/dev-logos";
 import FlickeringGrid from "~/components/react/ui/flickering-grid";
+import { FadeIntoViewDiv } from "~/components/react/fade-into-view-div";
 ---
 
 <!doctype html>
@@ -20,74 +21,55 @@ import FlickeringGrid from "~/components/react/ui/flickering-grid";
       <section class="flex min-h-screen flex-col items-center gap-4">
         <img
           alt="Gabriel Bianchi"
-          class="size-16 rounded-full"
+          class="size-32 rounded-full"
           src="https://github.com/dbianchii.png"
         />
-        <h1 class="text-3xl font-bold">Gabriel Bianchi</h1>
-        <h2 class="text-3xl font-bold">Full stack Web developer</h2>
+        <div class="flex flex-col items-center">
+          <h2
+            class="text-md font-mono font-extralight tracking-[8px] text-gray-50/50"
+          >
+            SOFTWARE ENGINEER
+          </h2>
+          <h1 class="text-5xl font-bold">Gabriel Bianchi</h1>
+        </div>
         <div class="absolute inset-0 -z-10 flex items-center justify-center">
           <FlickeringGrid
             client:load
-            className="relative top-60 [mask-image:radial-gradient(600px_circle_at_center,white,transparent)]"
+            className="relative top-48 [mask-image:radial-gradient(650px_circle_at_center,white,transparent)]"
             squareSize={5}
             gridGap={4}
             color="#60A5FA"
-            maxOpacity={0.5}
-            flickerChance={0.009}
+            maxOpacity={0.6}
+            flickerChance={0.01}
             height={100}
           />
         </div>
-        <DevLogos client:load />
-        <p class="mt-32 text-gray-50/50">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Soluta nisi
-          accusantium repellat qui deleniti. Voluptate deleniti doloremque
-          perspiciatis debitis, voluptatum necessitatibus vel consequatur nisi
-          maiores eos dicta tempora voluptatibus maxime, tempore ratione harum
-          temporibus enim dolorum laudantium ipsam sit blanditiis, illo aut?
-          Saepe assumenda beatae harum. Autem ab provident magnam ipsa, odio,
-          ipsam aliquam est iste dolores dolorum culpa dignissimos vero
-          reprehenderit eos molestiae quis voluptas voluptates eaque cumque
-          officiis dicta eum deleniti velit doloribus? A, quas modi dolorum
-          porro dolorem voluptate quisquam doloremque delectus voluptas, minus
-          harum ratione nihil corrupti quasi amet quibusdam earum. Numquam earum
-          ad fugiat corrupti rem, consequatur enim suscipit illum fugit incidunt
-          laborum minima temporibus expedita placeat est itaque nulla vero culpa
-          dolore. Consequatur quaerat aperiam facere recusandae. Placeat
-          incidunt at nobis suscipit! Ipsa laboriosam veritatis consectetur
-          ducimus voluptate ad. Fugit, animi sint. Voluptas quisquam, non, omnis
-          id eos voluptatem incidunt laborum veritatis qui nulla ratione,
-          expedita nam. Culpa voluptatibus dolores ratione aperiam et fuga ipsum
-          temporibus hic, odit eos excepturi unde similique ab repudiandae
-          aliquid enim, provident autem corrupti earum eius facere accusamus
-          repellat voluptates? Adipisci aliquid natus non necessitatibus
-          mollitia optio tempore quia omnis reiciendis voluptatem veritatis,
-          dolore voluptates fugit sapiente, asperiores ratione tempora. Sapiente
-          assumenda quibusdam id. Ducimus debitis, odio dignissimos quibusdam
-          quas excepturi nisi saepe provident laborum itaque neque dolore
-          voluptates reprehenderit suscipit facilis quae iusto sed aut
-          perspiciatis. Dolorem quis eos, sit explicabo ab, nihil placeat quidem
-          quisquam quos aperiam laboriosam necessitatibus id! Dicta maiores est
-          mollitia. Enim repellendus, perspiciatis totam sint eligendi possimus!
-          Ut minima atque inventore est nobis vel incidunt commodi fuga impedit
-          dolorum quo praesentium a consequuntur id, aliquid ipsum aliquam
-          necessitatibus, eius facilis debitis. Voluptate vel unde recusandae
-          aperiam, dolorem nobis quas nisi necessitatibus ab ducimus repellat
-          tempore dolores provident reprehenderit dolor sunt illum harum
-          corrupti ipsum at voluptates pariatur sed similique impedit? Assumenda
-          molestias, architecto porro voluptates veniam amet delectus aut quae
-          soluta pariatur. Incidunt temporibus at voluptatum animi quo fugit
-          velit quos molestias asperiores quis, dolorem vitae libero reiciendis!
-          Magni ipsa incidunt tempore iusto consequuntur dolore aliquid fugiat
-          deleniti iure veniam praesentium perspiciatis nostrum impedit
-          distinctio consequatur modi quae non, ducimus maiores et error? Iste
-          non rerum odio maxime et, repellendus corporis reiciendis doloribus
-          asperiores voluptatum? Quas soluta cumque quasi aut sapiente nulla
-          quam odit assumenda amet, et illo expedita aspernatur libero ab
-          aliquid dicta ex velit necessitatibus voluptatum? Nisi quam quibusdam
-          sint cum.
-        </p>
+        <div class="mt-16">
+          <DevLogos client:load />
+        </div>
       </section>
-      <Timeline client:load />
+      <section class="text-gray-50/60">
+        <FadeIntoViewDiv
+          client:load
+          className="flex flex-col items-center gap-4"
+        >
+          {/* <AnimatedBeamDemo /> */}
+
+          <h3 class="font-mono text-2xl tracking-[8px] text-gray-50/50">
+            ABOUT
+          </h3>
+          <p class="max-w-6xl text-center text-lg">
+            I'm a Software engineer based in Brazil. I'm passionate about
+            building web applications, exploring and discussing technologies,
+            and always eager to deliver great UX for both end-users and
+            developers. <span class="underline">React</span>,{" "}
+            <span class="underline">Next.JS</span> and{" "}
+            <span class="underline">Typescript</span>. <br />
+            I'm passionate about web development and always eager to learn new technologies.
+          </p>
+          <DevLogos client:load />
+        </FadeIntoViewDiv>
+      </section>
     </main>
     <Footer />
   </body>
