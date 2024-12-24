@@ -1,9 +1,15 @@
 ---
 import TsHeart from "~/assets/ts-heart.svg.astro";
+import { Spotlight } from "./react/spotlight";
 ---
 
 <footer class="flex justify-end overflow-hidden">
   <div class="relative left-[89px] top-[90px]">
     <TsHeart />
+    <div class="hover:translate-x-72 hover:bg-red-600">
+      <Spotlight className="left-96 top-72" fill="gray" />
+    </div>
+    <!-- <Spotlight className="left-72" fill="white" /> -->
+    <!-- <Spotlight className="left-80 top-32" fill="white" /> -->
   </div>
 </footer>

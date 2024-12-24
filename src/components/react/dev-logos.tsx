@@ -4,7 +4,7 @@ import {
   BiLogoTypescript,
 } from "react-icons/bi";
 import { RiNextjsFill } from "react-icons/ri";
-import { SiDrizzle } from "react-icons/si";
+import { SiDrizzle, SiTurborepo } from "react-icons/si";
 import { GrMysql } from "react-icons/gr";
 
 import * as motion from "motion/react-client";
@@ -17,20 +17,20 @@ import {
 
 const logos = [
   {
-    Component: <SiDrizzle className="size-12 hover:text-[#C5F74F]" />,
-    key: "DrizzleORM",
-  },
-  {
     Component: <BiLogoTypescript className="size-12 hover:text-[#1081D0]" />,
     key: "Typescript",
   },
   {
-    Component: <RiNextjsFill className="size-12 hover:text-white" />,
-    key: "Next.js",
+    Component: <SiDrizzle className="size-12 hover:text-[#C5F74F]" />,
+    key: "DrizzleORM",
   },
   {
     Component: <GrMysql className="size-12 hover:text-[#DA8E00]" />,
     key: "MySQL",
+  },
+  {
+    Component: <RiNextjsFill className="size-12 hover:text-white" />,
+    key: "Next.js",
   },
   {
     Component: <BiLogoReact className="size-12 hover:text-[#61DAFB]" />,
@@ -39,6 +39,10 @@ const logos = [
   {
     Component: <BiLogoTailwindCss className="size-12 hover:text-[#38bdf8]" />,
     key: "Tailwind",
+  },
+  {
+    Component: <SiTurborepo className="size-12 hover:text-[#FA225E]" />,
+    key: "Turborepo",
   },
 ];
 
