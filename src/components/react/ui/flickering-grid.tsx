@@ -1,3 +1,4 @@
+import { useAtom } from "jotai/react";
 import React, {
   useCallback,
   useEffect,
@@ -5,28 +6,74 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { colorValue, dialValue } from "../atoms";
 
-interface FlickeringGridProps {
-  squareSize?: number;
+const MAXIMUM_FLICKER_CHANCE = 0.3;
+const MINIMUM_FLICKER_CHANCE = 0.01;
+
+const useFlickeringChanceRef = () => {
+  const [dialPercent] = useAtom(dialValue);
+  const flickerChanceRef = useRef(
+    MINIMUM_FLICKER_CHANCE +
+      ((MAXIMUM_FLICKER_CHANCE - MINIMUM_FLICKER_CHANCE) * dialPercent) / 100,
+  );
+  useEffect(() => {
+    flickerChanceRef.current =
+      MINIMUM_FLICKER_CHANCE +
+      ((MAXIMUM_FLICKER_CHANCE - MINIMUM_FLICKER_CHANCE) * dialPercent) / 100;
+  }, [dialPercent]);
+
+  return flickerChanceRef;
+};
+
+const toRGBA = (color: string) => {
+  if (typeof window === "undefined") {
+    return `rgba(0, 0, 0,`;
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = 1;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return "rgba(255, 0,";
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, 1, 1);
+  const [r, g, b] = Array.from(ctx.getImageData(0, 0, 1, 1).data);
+  return `rgba(${r}, ${g}, ${b},`;
+};
+
+const useSecondaryColorRef = () => {
+  const [secondaryColor] = useAtom(colorValue);
+  const secondaryColorRef = useRef(secondaryColor);
+  useEffect(() => {
+    secondaryColorRef.current = toRGBA(secondaryColor);
+  }, [secondaryColor]);
+
+  return secondaryColorRef;
+};
+
+const FlickeringGrid: React.FC<{
   gridGap?: number;
   flickerChance?: number;
   color?: string;
+  secondaryColor?: string;
+  secondaryChance?: number;
+  squareSize?: number;
   width?: number;
   height?: number;
   className?: string;
   maxOpacity?: number;
-}
-
-const FlickeringGrid: React.FC<FlickeringGridProps> = ({
-  squareSize = 4,
+}> = ({
   gridGap = 6,
-  flickerChance = 0.3,
   color = "rgb(0, 0, 0)",
-  width,
+  secondaryChance = 0.5,
+  squareSize = 10,
   height,
+  width,
   className,
   maxOpacity = 0.3,
 }) => {
+  const flickerChanceRef = useFlickeringChanceRef();
+  const secondaryColorRef = useSecondaryColorRef();
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
@@ -61,7 +108,10 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 
       const squares = new Float32Array(cols * rows);
       for (let i = 0; i < squares.length; i++) {
-        squares[i] = Math.random() * maxOpacity;
+        const shouldBeSecondary = Math.random() < secondaryChance;
+        const opacity = Math.random() * maxOpacity;
+
+        squares[i] = shouldBeSecondary ? -opacity : opacity; // Use negative value to indicate secondary color
       }
 
       return { cols, rows, squares, dpr };
@@ -72,12 +122,14 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   const updateSquares = useCallback(
     (squares: Float32Array, deltaTime: number) => {
       for (let i = 0; i < squares.length; i++) {
-        if (Math.random() < flickerChance * deltaTime) {
-          squares[i] = Math.random() * maxOpacity;
+        if (Math.random() < flickerChanceRef.current * deltaTime) {
+          const newOpacity = Math.random() * maxOpacity;
+          const shouldBeSecondary = Math.random() < secondaryChance;
+          squares[i] = shouldBeSecondary ? -newOpacity : newOpacity; // Use negative value to indicate secondary color
         }
       }
     },
-    [flickerChance, maxOpacity],
+    [flickerChanceRef, maxOpacity],
   );
 
   const drawGrid = useCallback(
@@ -96,8 +148,8 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-          const opacity = squares[i * rows + j];
-          ctx.fillStyle = `${memoizedColor}${opacity})`;
+          const opacity = Math.abs(squares[i * rows + j]);
+          ctx.fillStyle = `${squares[i * rows + j] < 0 ? secondaryColorRef.current : memoizedColor}${opacity})`;
           ctx.fillRect(
             i * (squareSize + gridGap) * dpr,
             j * (squareSize + gridGap) * dpr,
@@ -107,7 +159,7 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
         }
       }
     },
-    [memoizedColor, squareSize, gridGap],
+    [memoizedColor, secondaryColorRef, squareSize, gridGap],
   );
 
   useEffect(() => {
