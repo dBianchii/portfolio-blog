@@ -1,6 +1,6 @@
 import { atomWithStorage } from "jotai/utils";
 
-export const dialValue = atomWithStorage("dialValue", 0, undefined, {
+export const dialValue = atomWithStorage("dialValue", 25, undefined, {
   getOnInit: true,
 });
 

@@ -14,7 +14,7 @@ export default function AnimatedCircularProgressBar({
   onClickRing,
 }: {
   max?: number;
-  value?: number;
+  value: number;
   min?: number;
   className?: string;
   children?: React.ReactNode;

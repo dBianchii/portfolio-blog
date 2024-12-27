@@ -3,7 +3,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import {
   motion,
-  MotionValue,
+  type MotionValue,
   useMotionValue,
   useSpring,
   useTransform,

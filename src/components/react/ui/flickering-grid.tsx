@@ -8,8 +8,8 @@ import React, {
 } from "react";
 import { colorValue, dialValue } from "../atoms";
 
-const MAXIMUM_FLICKER_CHANCE = 0.3;
-const MINIMUM_FLICKER_CHANCE = 0.01;
+const MAXIMUM_FLICKER_CHANCE = 0.08;
+const MINIMUM_FLICKER_CHANCE = 0.005;
 
 const useFlickeringChanceRef = () => {
   const [dialPercent] = useAtom(dialValue);
@@ -17,6 +17,7 @@ const useFlickeringChanceRef = () => {
     MINIMUM_FLICKER_CHANCE +
       ((MAXIMUM_FLICKER_CHANCE - MINIMUM_FLICKER_CHANCE) * dialPercent) / 100,
   );
+
   useEffect(() => {
     flickerChanceRef.current =
       MINIMUM_FLICKER_CHANCE +
