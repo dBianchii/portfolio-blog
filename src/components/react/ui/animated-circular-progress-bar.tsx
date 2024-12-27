@@ -1,7 +1,5 @@
-import { useAtom } from "jotai/react";
-import React, { useState, useCallback, useEffect } from "react";
-import { colorValue } from "../atoms";
-
+import React, { useCallback, useState } from "react";
+import { useColor } from "../atoms";
 export default function AnimatedCircularProgressBar({
   max = 100,
   min = 0,
@@ -24,9 +22,10 @@ export default function AnimatedCircularProgressBar({
   sensitivity?: number;
   onClickRing?: () => void;
 }) {
-  const [color] = useAtom(colorValue);
+  const { color } = useColor();
 
   const [isDragging, setIsDragging] = useState(false);
+
   const [startY, setStartY] = useState(0);
   const [startValue, setStartValue] = useState(value);
 
@@ -39,7 +38,7 @@ export default function AnimatedCircularProgressBar({
       setIsDragging(true);
       setStartY("touches" in e ? e.touches[0].clientY : e.clientY);
       setStartValue(value);
-      document.body.style.cursor = "grabbing";
+      document.body.style.cursor = "none";
     },
     [value],
   );
@@ -86,14 +85,14 @@ export default function AnimatedCircularProgressBar({
 
   return (
     <div
-      className={`relative size-32 text-2xl font-semibold ${className}`}
+      className={`relative z-10 size-32 text-2xl font-semibold ${className}`}
       style={{
         transform: "translateZ(0)",
       }}
     >
       <svg
         fill="none"
-        className="size-full"
+        className="size-full transition-transform duration-200 ease-in-out"
         strokeWidth="2"
         viewBox="0 0 100 100"
       >
@@ -107,7 +106,7 @@ export default function AnimatedCircularProgressBar({
             strokeDashoffset="0"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="opacity-100 hover:scale-110"
+            className="cursor-pointer opacity-100 hover:stroke-[10]"
             style={{
               strokeDasharray: `${(90 - currentPercent) * percentPx}px ${circumference}px`,
               transform: "rotate(270deg) scaleY(-1)",
@@ -124,7 +123,7 @@ export default function AnimatedCircularProgressBar({
           strokeDashoffset="0"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="opacity-100"
+          className="cursor-pointer opacity-100 hover:stroke-[10]"
           style={{
             stroke: color,
             strokeDasharray: `${currentPercent * percentPx}px ${circumference}px`,
@@ -133,27 +132,19 @@ export default function AnimatedCircularProgressBar({
           }}
         />
       </svg>
-      {children ? (
-        <span
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleMouseDown}
-          data-current-value={currentPercent}
-          className="absolute inset-0 m-auto size-fit select-none"
-          style={{ cursor: isDragging ? "grabbing" : "grab" }}
-        >
-          {children}
-        </span>
-      ) : (
-        <span
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleMouseDown}
-          data-current-value={currentPercent}
-          className="absolute inset-0 m-auto size-fit select-none"
-          style={{ cursor: isDragging ? "grabbing" : "grab" }}
-        >
-          {currentPercent}
-        </span>
-      )}
+      <span
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleMouseDown}
+        data-current-value={currentPercent}
+        className="absolute inset-0 m-auto size-fit scale-95 select-none rounded-full"
+        style={{ cursor: isDragging ? "none" : "grab" }}
+      >
+        <img
+          alt="Gabriel Bianchi"
+          className="pointer-events-none z-10 size-24 rounded-full p-0 transition-opacity hover:opacity-75"
+          src="https://github.com/dbianchii.png"
+        />
+      </span>
     </div>
   );
 }

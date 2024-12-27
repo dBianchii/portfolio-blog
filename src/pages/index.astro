@@ -1,14 +1,13 @@
 ---
-import "~/styles/global.css";
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import { AvatarDial } from "~/components/react/avatar-dial";
 import { DevLogos } from "~/components/react/dev-logos";
-import FlickeringGrid from "~/components/react/ui/flickering-grid";
 import { FadeIntoViewDiv } from "~/components/react/fade-into-view-div";
 import AnimatedCircularProgressBar from "~/components/react/ui/animated-circular-progress-bar";
-import { AvatarDial } from "~/components/react/avatar-dial";
+import FlickeringGrid from "~/components/react/ui/flickering-grid";
+import "~/styles/global.css";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 ---
 
 <!doctype html>
@@ -17,25 +16,34 @@ import { AvatarDial } from "~/components/react/avatar-dial";
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
   <body class="bg-slate-950 font-semibold text-gray-50">
-    <Header />
     <main class="flex flex-col gap-4 px-8">
+      <div class="absolute inset-0">
+        <FlickeringGrid
+          client:load
+          className="relative [mask-image:radial-gradient(650px_circle_at_center,white,transparent)]"
+          squareSize={17}
+          gridGap={4}
+          color="#60A5FA"
+          secondaryColor="magenta"
+          maxOpacity={0.6}
+          flickerChance={0.01}
+          height={2000}
+        />
+      </div>
       <section class="flex min-h-screen flex-col items-center gap-4">
-        <AvatarDial client:only>
-          <div slot="fallback">
-            <AnimatedCircularProgressBar max={100} min={0} value={5}>
-              <img
-                alt="Gabriel Bianchi"
-                class="pointer-events-none z-10 size-24 rounded-full p-0 transition-opacity hover:opacity-75"
-                src="https://github.com/dbianchii.png"
-              />
-            </AnimatedCircularProgressBar>
-          </div>
-          <img
-            alt="Gabriel Bianchi"
-            class="pointer-events-none z-10 size-24 rounded-full p-0 transition-opacity hover:opacity-75"
-            src="https://github.com/dbianchii.png"
-          />
-        </AvatarDial>
+        <div class="mt-20">
+          <AvatarDial client:only>
+            <div slot="fallback">
+              <AnimatedCircularProgressBar max={100} min={0} value={5}>
+                <img
+                  alt="Gabriel Bianchi"
+                  class="pointer-events-none z-10 size-24 rounded-full p-0 transition-opacity hover:opacity-75"
+                  src="https://github.com/dbianchii.png"
+                />
+              </AnimatedCircularProgressBar>
+            </div>
+          </AvatarDial>
+        </div>
         <div class="flex flex-col items-center">
           <h2
             class="text-md font-mono font-extralight tracking-[8px] text-gray-50/50"
@@ -44,19 +52,7 @@ import { AvatarDial } from "~/components/react/avatar-dial";
           </h2>
           <h1 class="text-5xl font-bold">Gabriel Bianchi</h1>
         </div>
-        <div class="absolute inset-0 -z-10 flex items-center justify-center">
-          <FlickeringGrid
-            client:load
-            className="relative [mask-image:radial-gradient(650px_circle_at_center,white,transparent)]"
-            squareSize={17}
-            gridGap={4}
-            color="#60A5FA"
-            secondaryColor="magenta"
-            maxOpacity={0.6}
-            flickerChance={0.01}
-            height={2000}
-          />
-        </div>
+
         <div class="mt-16">
           <DevLogos client:load />
         </div>

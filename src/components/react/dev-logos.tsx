@@ -59,8 +59,8 @@ export function DevLogos() {
           iconSize={size}
         >
           {logos.map(({ Component, key }, i) => (
-            <DockIcon>
-              <Tooltip delayDuration={50} key={key + i}>
+            <DockIcon key={key + i}>
+              <Tooltip delayDuration={50}>
                 <TooltipTrigger asChild>{Component}</TooltipTrigger>
                 <TooltipContent side="bottom">
                   <p>{key}</p>

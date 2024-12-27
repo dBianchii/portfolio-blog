@@ -1,32 +1,22 @@
-import { useState } from "react";
-import AnimatedCircularProgressBar from "./ui/animated-circular-progress-bar";
 import { useAtom } from "jotai/react";
-import { colorValue, dialValue } from "./atoms";
-import { ColorPicker } from "./ui/color-picker";
+import { colorBrightnessPercentAtom, useColor } from "./atoms";
+import AnimatedCircularProgressBar from "./ui/animated-circular-progress-bar";
 
 export function AvatarDial({ children }: { children?: React.ReactNode }) {
-  const [value, setValue] = useAtom(dialValue);
-  const [color, setColor] = useAtom(colorValue);
-  const [open, setOpen] = useState(false);
+  const [value, setValue] = useAtom(colorBrightnessPercentAtom);
+  const { changeHue } = useColor();
+
   return (
-    <>
-      <ColorPicker
-        open={open}
-        setOpen={(open) => {
-          setOpen(open);
-        }}
-        value={color}
-        onChange={setColor}
-      />
-      <AnimatedCircularProgressBar
-        max={100}
-        min={0}
-        onClickRing={() => setOpen(true)}
-        value={value}
-        onChange={setValue}
-      >
-        {children}
-      </AnimatedCircularProgressBar>
-    </>
+    <AnimatedCircularProgressBar
+      max={100}
+      min={0}
+      onClickRing={() => {
+        changeHue();
+      }}
+      value={value}
+      onChange={setValue}
+    >
+      {children}
+    </AnimatedCircularProgressBar>
   );
 }

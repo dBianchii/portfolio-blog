@@ -1,12 +1,11 @@
 "use client";
 
-import { forwardRef, useMemo, useState } from "react";
+import { forwardRef, useMemo } from "react";
 import { HexColorPicker } from "react-colorful";
-import { Button, type ButtonProps } from "./button";
 import { useForwardedRef } from "~/lib/use-forwarded-ref";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { cn } from "~/lib/utils";
+import { type ButtonProps } from "./button";
 import { Input } from "./input";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 interface ColorPickerProps {
   value: string;

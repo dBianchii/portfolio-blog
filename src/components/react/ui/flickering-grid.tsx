@@ -1,4 +1,3 @@
-import { useAtom } from "jotai/react";
 import React, {
   useCallback,
   useEffect,
@@ -6,26 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { colorValue, dialValue } from "../atoms";
+import { useColor } from "../atoms";
 
-const MAXIMUM_FLICKER_CHANCE = 0.08;
-const MINIMUM_FLICKER_CHANCE = 0.005;
-
-const useFlickeringChanceRef = () => {
-  const [dialPercent] = useAtom(dialValue);
-  const flickerChanceRef = useRef(
-    MINIMUM_FLICKER_CHANCE +
-      ((MAXIMUM_FLICKER_CHANCE - MINIMUM_FLICKER_CHANCE) * dialPercent) / 100,
-  );
-
-  useEffect(() => {
-    flickerChanceRef.current =
-      MINIMUM_FLICKER_CHANCE +
-      ((MAXIMUM_FLICKER_CHANCE - MINIMUM_FLICKER_CHANCE) * dialPercent) / 100;
-  }, [dialPercent]);
-
-  return flickerChanceRef;
-};
+const ROUNDNESS = 0.4;
 
 const toRGBA = (color: string) => {
   if (typeof window === "undefined") {
@@ -42,11 +24,11 @@ const toRGBA = (color: string) => {
 };
 
 const useSecondaryColorRef = () => {
-  const [secondaryColor] = useAtom(colorValue);
-  const secondaryColorRef = useRef(secondaryColor);
+  const { color } = useColor();
+  const secondaryColorRef = useRef(color);
   useEffect(() => {
-    secondaryColorRef.current = toRGBA(secondaryColor);
-  }, [secondaryColor]);
+    secondaryColorRef.current = toRGBA(color);
+  }, [color]);
 
   return secondaryColorRef;
 };
@@ -63,6 +45,7 @@ const FlickeringGrid: React.FC<{
   className?: string;
   maxOpacity?: number;
 }> = ({
+  flickerChance = 0.2,
   gridGap = 6,
   color = "rgb(0, 0, 0)",
   secondaryChance = 0.5,
@@ -72,8 +55,8 @@ const FlickeringGrid: React.FC<{
   className,
   maxOpacity = 0.3,
 }) => {
-  const flickerChanceRef = useFlickeringChanceRef();
   const secondaryColorRef = useSecondaryColorRef();
+  const hoveredSquareTrail = useRef<{ index: number; opacity: number }[]>([]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -123,14 +106,14 @@ const FlickeringGrid: React.FC<{
   const updateSquares = useCallback(
     (squares: Float32Array, deltaTime: number) => {
       for (let i = 0; i < squares.length; i++) {
-        if (Math.random() < flickerChanceRef.current * deltaTime) {
+        if (Math.random() < flickerChance * deltaTime) {
           const newOpacity = Math.random() * maxOpacity;
           const shouldBeSecondary = Math.random() < secondaryChance;
           squares[i] = shouldBeSecondary ? -newOpacity : newOpacity; // Use negative value to indicate secondary color
         }
       }
     },
-    [flickerChanceRef, maxOpacity],
+    [flickerChance, maxOpacity],
   );
 
   const drawGrid = useCallback(
@@ -149,14 +132,54 @@ const FlickeringGrid: React.FC<{
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-          const opacity = Math.abs(squares[i * rows + j]);
-          ctx.fillStyle = `${squares[i * rows + j] < 0 ? secondaryColorRef.current : memoizedColor}${opacity})`;
-          ctx.fillRect(
+          const index = i * rows + j;
+          const opacity = Math.abs(squares[index]);
+          ctx.fillStyle = `${squares[index] < 0 ? secondaryColorRef.current : memoizedColor}${opacity})`;
+
+          const foundSquare = hoveredSquareTrail.current?.find(
+            (square) => square.index === index,
+          );
+
+          if (foundSquare) {
+            ctx.fillStyle = `${secondaryColorRef.current}${foundSquare.opacity}`; // Change color on hover
+          }
+
+          const radius = ((squareSize * dpr) / 2) * ROUNDNESS;
+          ctx.beginPath();
+          ctx.moveTo(
+            i * (squareSize + gridGap) * dpr + radius,
+            j * (squareSize + gridGap) * dpr,
+          );
+          ctx.arcTo(
+            i * (squareSize + gridGap) * dpr + squareSize * dpr,
+            j * (squareSize + gridGap) * dpr,
+            i * (squareSize + gridGap) * dpr + squareSize * dpr,
+            j * (squareSize + gridGap) * dpr + squareSize * dpr,
+            radius,
+          );
+          ctx.arcTo(
+            i * (squareSize + gridGap) * dpr + squareSize * dpr,
+            j * (squareSize + gridGap) * dpr + squareSize * dpr,
+            i * (squareSize + gridGap) * dpr,
+            j * (squareSize + gridGap) * dpr + squareSize * dpr,
+            radius,
+          );
+          ctx.arcTo(
+            i * (squareSize + gridGap) * dpr,
+            j * (squareSize + gridGap) * dpr + squareSize * dpr,
             i * (squareSize + gridGap) * dpr,
             j * (squareSize + gridGap) * dpr,
-            squareSize * dpr,
-            squareSize * dpr,
+            radius,
           );
+          ctx.arcTo(
+            i * (squareSize + gridGap) * dpr,
+            j * (squareSize + gridGap) * dpr,
+            i * (squareSize + gridGap) * dpr + squareSize * dpr,
+            j * (squareSize + gridGap) * dpr,
+            radius,
+          );
+          ctx.closePath();
+          ctx.fill();
         }
       }
     },
@@ -184,11 +207,27 @@ const FlickeringGrid: React.FC<{
     updateCanvasSize();
 
     let lastTime = 0;
+    let count = 0;
     const animate = (time: number) => {
       if (!isInView) return;
 
       const deltaTime = (time - lastTime) / 1000;
       lastTime = time;
+      count++;
+      if (count % 5 === 0) {
+        count = 0; // Update every 5 frames
+        if (hoveredSquareTrail.current.length > 0) {
+          hoveredSquareTrail.current = hoveredSquareTrail.current.map(
+            (trail) => ({
+              index: trail.index,
+              opacity: trail.opacity - 0.05,
+            }),
+          );
+          hoveredSquareTrail.current = hoveredSquareTrail.current.filter(
+            (trail) => trail.opacity > 0,
+          );
+        }
+      }
 
       updateSquares(gridParams.squares, deltaTime);
       drawGrid(
@@ -222,10 +261,25 @@ const FlickeringGrid: React.FC<{
       animationFrameId = requestAnimationFrame(animate);
     }
 
+    const handleMouseMove = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const col = Math.floor(x / (squareSize + gridGap));
+      const row = Math.floor(y / (squareSize + gridGap));
+      const index = col * gridParams.rows + row;
+      if (!hoveredSquareTrail.current.some((square) => square.index === index))
+        hoveredSquareTrail.current.push({
+          index,
+          opacity: maxOpacity + 0.3,
+        });
+    };
+    canvas.addEventListener("mousemove", handleMouseMove);
     return () => {
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      canvas.removeEventListener("mousemove", handleMouseMove);
     };
   }, [setupCanvas, updateSquares, drawGrid, width, height, isInView]);
 
@@ -233,7 +287,6 @@ const FlickeringGrid: React.FC<{
     <div ref={containerRef} className={`h-full w-full ${className}`}>
       <canvas
         ref={canvasRef}
-        className="pointer-events-none"
         style={{
           width: canvasSize.width,
           height: canvasSize.height,
