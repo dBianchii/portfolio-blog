@@ -66,6 +66,7 @@ function FlickeringGrid({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const isMouseDownRef = useRef(false);
 
   const memoizedColor = useMemo(() => {
     const toRGBA = (color: string) => {
@@ -284,6 +285,14 @@ function FlickeringGrid({
       animationFrameId = requestAnimationFrame(animate);
     }
 
+    const selectSquare = (index: number) => {
+      playRandomPopSound();
+      clickedSquaresRef.current.push({
+        index,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+      });
+    };
+
     const handleMouseMove = (event: MouseEvent) => {
       const index = getSquareIndexBasedOnMousePosition(event);
       if (!hoveredSquareTrail.current.some((square) => square.index === index))
@@ -291,27 +300,38 @@ function FlickeringGrid({
           index,
           opacity: maxOpacity + 0.3,
         });
+
+      if (!isMouseDownRef.current) return;
+
+      if (!clickedSquaresRef.current.some((square) => square.index === index))
+        selectSquare(index);
     };
 
-    const handleClick = (event: MouseEvent) => {
+    const handleMouseDown = (event: MouseEvent) => {
+      isMouseDownRef.current = true;
       const index = getSquareIndexBasedOnMousePosition(event);
-      playRandomPopSound();
       if (!clickedSquaresRef.current.some((square) => square.index === index)) {
-        clickedSquaresRef.current.push({
-          index,
-          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-        });
+        selectSquare(index);
       }
     };
 
+    const handleMouseUp = () => {
+      isMouseDownRef.current = false;
+    };
+
     canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("click", handleClick);
+    canvas.addEventListener("mousedown", handleMouseDown);
+    canvas.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mouseup", handleMouseUp); // To handle mouseup outside the canvas
+
     return () => {
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       canvas.removeEventListener("mousemove", handleMouseMove);
-      canvas.removeEventListener("click", handleClick);
+      canvas.removeEventListener("mousedown", handleMouseDown);
+      canvas.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [setupCanvas, updateSquares, drawGrid, width, height, isInView]);
 
