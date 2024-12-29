@@ -1,33 +1,38 @@
 ---
+import { Image } from "astro:assets";
 import { AvatarDial } from "~/components/react/avatar-dial";
 import { DevLogos } from "~/components/react/dev-logos";
 import { FadeIntoViewDiv } from "~/components/react/fade-into-view-div";
 import AnimatedCircularProgressBar from "~/components/react/ui/animated-circular-progress-bar";
+import { Button, buttonVariants } from "~/components/react/ui/button";
 import FlickeringGrid from "~/components/react/ui/flickering-grid";
 import "~/styles/global.css";
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import TotalYearsOfExperience from "~/components/TotalYearsOfExperience.astro";
+import { cn } from "~/lib/utils";
+import { ExperienceCards } from "~/components/react/experience-cards";
 ---
 
 <!doctype html>
-<html lang="en" class="antialiased transition-all">
+<html lang="en" class="dark antialiased transition-all">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
   <body class="bg-slate-950 font-semibold text-gray-50">
     <main class="flex flex-col gap-4 px-8">
-      <div class="absolute inset-0 px-1">
+      <div class="absolute inset-0 overflow-hidden px-1">
         <FlickeringGrid
-          client:load
-          className="relative [mask-image:radial-gradient(650px_circle_at_center,white,transparent)]"
+          client:only
+          className="relative [mask-image:radial-gradient(450px_circle_at_center,white,transparent)] md:[mask-image:radial-gradient(650px_circle_at_center,white,transparent)]"
           squareSize={17}
           gridGap={4}
           color="#60A5FA"
           secondaryColor="magenta"
           maxOpacity={0.6}
           flickerChance={0.01}
-          height={2000}
+          height={800}
         />
       </div>
       <section class="flex min-h-screen flex-col items-center gap-4">
@@ -35,7 +40,9 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
           <AvatarDial client:only>
             <div slot="fallback">
               <AnimatedCircularProgressBar max={100} min={0} value={5}>
-                <img
+                <Image
+                  width={120}
+                  height={120}
                   alt="Gabriel Bianchi"
                   class="pointer-events-none z-10 size-24 rounded-full p-0 transition-opacity hover:opacity-75"
                   src="https://github.com/dbianchii.png"
@@ -44,37 +51,73 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
             </div>
           </AvatarDial>
         </div>
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center justify-center">
+          <!-- <div
+            class="absolute z-10 h-28 w-[800px] bg-gradient-to-r from-transparent from-10% via-black/60 to-transparent to-90%"
+          >
+          </div> -->
           <h2
-            class="text-md font-mono font-extralight tracking-[8px] text-gray-50/50"
+            class="text-md z-20 select-none text-center font-mono font-extralight tracking-[8px] text-gray-50/50"
           >
             SOFTWARE ENGINEER
           </h2>
-          <h1 class="text-5xl font-bold">Gabriel Bianchi</h1>
+          <h1 class="z-20 select-none text-center text-5xl font-bold">
+            Gabriel Bianchi
+          </h1>
         </div>
-
         <div class="mt-16">
-          <DevLogos client:load />
+          <DevLogos client:only />
         </div>
+        <div class="flex">
+          <Button
+            variant={"blurred"}
+            size={"lg"}
+            className="mr-4 select-none rounded-xl">About</Button
+          >
+          <Button
+            variant={"blurred"}
+            size={"lg"}
+            className="mr-4 select-none rounded-xl">Experience</Button
+          >
+          <a
+            href="https://cal.com/gabriel-bianchi"
+            class={cn(
+              buttonVariants({ variant: "blurred", size: "lg" }),
+              "rounded-xl select-none",
+            )}>Experience</a
+          >
+        </div>
+      </section>
+      <section class="py-64 text-gray-50/60">
+        <FadeIntoViewDiv
+          client:load
+          className="flex flex-col items-center gap-4"
+        >
+          <h2 class="font-mono text-3xl tracking-[8px] text-gray-50/50">
+            ABOUT
+          </h2>
+          <p class="max-w-5xl text-center text-lg">
+            I'm a Software engineer based in Brazil. I've got <TotalYearsOfExperience
+              client:load
+            />+ years of web dev experience. I'm passionate about building web
+            applications, exploring and discussing technologies, and always
+            eager to deliver great UX for end-users, and simple DX for
+            developers.
+          </p>
+          <p>Let's build something together!</p>
+        </FadeIntoViewDiv>
       </section>
       <section class="text-gray-50/60">
         <FadeIntoViewDiv
           client:load
           className="flex flex-col items-center gap-4"
         >
-          {/* <AnimatedBeamDemo /> */}
-
-          <h3 class="font-mono text-2xl tracking-[8px] text-gray-50/50">
-            ABOUT
-          </h3>
-          <p class="max-w-6xl text-center text-lg">
-            I'm a Software engineer based in Brazil. I'm passionate about
-            building web applications, exploring and discussing technologies,
-            and always eager to deliver great UX for end-users, and simple DX
-            for developers. <span class="underline">React</span>,{" "}
-            <span class="underline">Next.JS</span> and{" "}
-            <span class="underline">Typescript</span>. <br />
-          </p>
+          <h2 class="font-mono text-3xl tracking-[8px] text-gray-50/50">
+            EXPERIENCE
+          </h2>
+          <div>
+            <ExperienceCards client:only />
+          </div>
         </FadeIntoViewDiv>
       </section>
     </main>

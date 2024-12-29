@@ -85,7 +85,7 @@ export default function AnimatedCircularProgressBar({
 
   return (
     <div
-      className={`relative z-10 size-32 text-2xl font-semibold ${className}`}
+      className={`relative z-30 size-32 text-2xl font-semibold ${className}`}
       style={{
         transform: "translateZ(0)",
       }}

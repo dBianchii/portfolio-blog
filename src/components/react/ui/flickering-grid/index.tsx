@@ -5,7 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useColor } from "../atoms";
+
+import { useColor } from "../../atoms";
+import { usePopSounds } from "./use-pop-sound";
 
 const ROUNDNESS = 0.4;
 
@@ -33,7 +35,17 @@ const useSecondaryColorRef = () => {
   return secondaryColorRef;
 };
 
-const FlickeringGrid: React.FC<{
+function FlickeringGrid({
+  flickerChance = 0.2,
+  gridGap = 6,
+  color = "rgb(0, 0, 0)",
+  secondaryChance = 0.5,
+  squareSize = 10,
+  height,
+  width,
+  className,
+  maxOpacity = 0.3,
+}: {
   gridGap?: number;
   flickerChance?: number;
   color?: string;
@@ -44,19 +56,11 @@ const FlickeringGrid: React.FC<{
   height?: number;
   className?: string;
   maxOpacity?: number;
-}> = ({
-  flickerChance = 0.2,
-  gridGap = 6,
-  color = "rgb(0, 0, 0)",
-  secondaryChance = 0.5,
-  squareSize = 10,
-  height,
-  width,
-  className,
-  maxOpacity = 0.3,
-}) => {
+}) {
+  const { playRandomPopSound } = usePopSounds();
   const secondaryColorRef = useSecondaryColorRef();
   const hoveredSquareTrail = useRef<{ index: number; opacity: number }[]>([]);
+  const clickedSquaresRef = useRef<{ color: string; index: number }[]>([]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -144,38 +148,47 @@ const FlickeringGrid: React.FC<{
             ctx.fillStyle = `${secondaryColorRef.current}${foundSquare.opacity}`; // Change color on hover
           }
 
+          const clickedSquare = clickedSquaresRef.current.find(
+            (square) => square.index === index,
+          );
+
+          if (clickedSquare) {
+            ctx.fillStyle = clickedSquare.color;
+          }
+          const currentSquareSize = clickedSquare ? squareSize + 3 : squareSize;
+
+          const x = i * (squareSize + gridGap) * dpr + (squareSize * dpr) / 2;
+          const y = j * (squareSize + gridGap) * dpr + (squareSize * dpr) / 2;
+
           const radius = ((squareSize * dpr) / 2) * ROUNDNESS;
           ctx.beginPath();
-          ctx.moveTo(
-            i * (squareSize + gridGap) * dpr + radius,
-            j * (squareSize + gridGap) * dpr,
-          );
+          ctx.moveTo(x + radius, y - (currentSquareSize * dpr) / 2);
           ctx.arcTo(
-            i * (squareSize + gridGap) * dpr + squareSize * dpr,
-            j * (squareSize + gridGap) * dpr,
-            i * (squareSize + gridGap) * dpr + squareSize * dpr,
-            j * (squareSize + gridGap) * dpr + squareSize * dpr,
+            x + (currentSquareSize * dpr) / 2,
+            y - (currentSquareSize * dpr) / 2,
+            x + (currentSquareSize * dpr) / 2,
+            y + (currentSquareSize * dpr) / 2,
             radius,
           );
           ctx.arcTo(
-            i * (squareSize + gridGap) * dpr + squareSize * dpr,
-            j * (squareSize + gridGap) * dpr + squareSize * dpr,
-            i * (squareSize + gridGap) * dpr,
-            j * (squareSize + gridGap) * dpr + squareSize * dpr,
+            x + (currentSquareSize * dpr) / 2,
+            y + (currentSquareSize * dpr) / 2,
+            x - (currentSquareSize * dpr) / 2,
+            y + (currentSquareSize * dpr) / 2,
             radius,
           );
           ctx.arcTo(
-            i * (squareSize + gridGap) * dpr,
-            j * (squareSize + gridGap) * dpr + squareSize * dpr,
-            i * (squareSize + gridGap) * dpr,
-            j * (squareSize + gridGap) * dpr,
+            x - (currentSquareSize * dpr) / 2,
+            y + (currentSquareSize * dpr) / 2,
+            x - (currentSquareSize * dpr) / 2,
+            y - (currentSquareSize * dpr) / 2,
             radius,
           );
           ctx.arcTo(
-            i * (squareSize + gridGap) * dpr,
-            j * (squareSize + gridGap) * dpr,
-            i * (squareSize + gridGap) * dpr + squareSize * dpr,
-            j * (squareSize + gridGap) * dpr,
+            x - (currentSquareSize * dpr) / 2,
+            y - (currentSquareSize * dpr) / 2,
+            x + (currentSquareSize * dpr) / 2,
+            y - (currentSquareSize * dpr) / 2,
             radius,
           );
           ctx.closePath();
@@ -190,6 +203,16 @@ const FlickeringGrid: React.FC<{
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
+
+    const getSquareIndexBasedOnMousePosition = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const col = Math.floor(x / (squareSize + gridGap));
+      const row = Math.floor(y / (squareSize + gridGap));
+      const index = col * gridParams.rows + row;
+      return index;
+    };
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -262,29 +285,42 @@ const FlickeringGrid: React.FC<{
     }
 
     const handleMouseMove = (event: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const col = Math.floor(x / (squareSize + gridGap));
-      const row = Math.floor(y / (squareSize + gridGap));
-      const index = col * gridParams.rows + row;
+      const index = getSquareIndexBasedOnMousePosition(event);
       if (!hoveredSquareTrail.current.some((square) => square.index === index))
         hoveredSquareTrail.current.push({
           index,
           opacity: maxOpacity + 0.3,
         });
     };
+
+    const handleClick = (event: MouseEvent) => {
+      const index = getSquareIndexBasedOnMousePosition(event);
+      playRandomPopSound();
+      if (!clickedSquaresRef.current.some((square) => square.index === index)) {
+        clickedSquaresRef.current.push({
+          index,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+        });
+      }
+    };
+
     canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("click", handleClick);
     return () => {
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("click", handleClick);
     };
   }, [setupCanvas, updateSquares, drawGrid, width, height, isInView]);
 
   return (
-    <div ref={containerRef} className={`h-full w-full ${className}`}>
+    <div
+      ref={containerRef}
+      className={`h-full w-full ${className}`}
+      id="banana"
+    >
       <canvas
         ref={canvasRef}
         style={{
@@ -294,6 +330,6 @@ const FlickeringGrid: React.FC<{
       />
     </div>
   );
-};
+}
 
 export default FlickeringGrid;

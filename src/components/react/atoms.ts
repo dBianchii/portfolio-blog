@@ -3,7 +3,7 @@ import { atomWithStorage } from "jotai/utils";
 
 export const colorBrightnessPercentAtom = atomWithStorage(
   "dialValue",
-  25,
+  77,
   undefined,
   {
     getOnInit: true,
@@ -12,7 +12,7 @@ export const colorBrightnessPercentAtom = atomWithStorage(
 
 const HUES = [0, 60, 120, 180, 240, 300];
 
-export const colorHueAtom = atomWithStorage("colorValue", HUES[5], undefined, {
+export const colorHueAtom = atomWithStorage("colorValue", HUES[4], undefined, {
   getOnInit: true,
 });
 
