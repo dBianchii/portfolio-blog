@@ -2,17 +2,16 @@
 import { Image } from "astro:assets";
 import { AvatarDial } from "~/components/react/avatar-dial";
 import { DevLogos } from "~/components/react/dev-logos";
+import { ExperienceCards } from "~/components/react/experience-cards";
 import { FadeIntoViewDiv } from "~/components/react/fade-into-view-div";
 import AnimatedCircularProgressBar from "~/components/react/ui/animated-circular-progress-bar";
 import { Button, buttonVariants } from "~/components/react/ui/button";
 import FlickeringGrid from "~/components/react/ui/flickering-grid";
+import { cn } from "~/lib/utils";
 import "~/styles/global.css";
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
-import TotalYearsOfExperience from "~/components/TotalYearsOfExperience.astro";
-import { cn } from "~/lib/utils";
-import { ExperienceCards } from "~/components/react/experience-cards";
 ---
 
 <!doctype html>
@@ -97,12 +96,10 @@ import { ExperienceCards } from "~/components/react/experience-cards";
             ABOUT
           </h2>
           <p class="max-w-5xl text-center text-lg">
-            I'm a Software engineer based in Brazil. I've got <TotalYearsOfExperience
-              client:load
-            />+ years of web dev experience. I'm passionate about building web
-            applications, exploring and discussing technologies, and always
-            eager to deliver great UX for end-users, and simple DX for
-            developers.
+            I'm a Software engineer based in Brazil. I've got 3+ years of web
+            dev experience. I'm passionate about building web applications,
+            exploring and discussing technologies, and always eager to deliver
+            great UX for end-users, and simple DX for developers.
           </p>
           <p>Let's build something together!</p>
         </FadeIntoViewDiv>
