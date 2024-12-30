@@ -154,9 +154,9 @@ function FlickeringGrid({
           );
 
           if (clickedSquare) {
-            ctx.fillStyle = clickedSquare.color;
+            ctx.fillStyle = `${secondaryColorRef.current}70`;
           }
-          const currentSquareSize = clickedSquare ? squareSize + 3 : squareSize;
+          const currentSquareSize = clickedSquare ? squareSize + 1 : squareSize;
 
           const x = i * (squareSize + gridGap) * dpr + (squareSize * dpr) / 2;
           const y = j * (squareSize + gridGap) * dpr + (squareSize * dpr) / 2;

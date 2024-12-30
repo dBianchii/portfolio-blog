@@ -1,34 +1,53 @@
+import { BiLogoTypescript } from "react-icons/bi";
+import { FaBootstrap, FaReact } from "react-icons/fa";
+import { FaDatabase, FaJava } from "react-icons/fa6";
+import { RiJavascriptFill } from "react-icons/ri";
+import { SiDotnet, SiMongodb, SiMysql, SiNginx } from "react-icons/si";
+import { TbBrandCSharp } from "react-icons/tb";
 import intemobileImage from "../../../assets/intemobile.jpeg";
 import staysImage from "../../../assets/stays.png";
-import { Card, CardTitle, CardDescription, CardContent } from "../ui/card";
-import { TbBrandCSharp } from "react-icons/tb";
-import { BiLinkExternal, BiLogoTypescript } from "react-icons/bi";
-import { RiJavascriptFill } from "react-icons/ri";
-import { PiFileSqlDuotone } from "react-icons/pi";
-import { FaDatabase } from "react-icons/fa6";
-import { SiDotnet } from "react-icons/si";
-import { FaBootstrap } from "react-icons/fa";
-import { SiMongodb } from "react-icons/si";
+import FIAPImage from "../../../assets/FIAP.png";
+import { CardContent, CardDescription, CardTitle } from "../ui/card";
+import { SiJest } from "react-icons/si";
+import { GrMysql } from "react-icons/gr";
+import { RiNextjsFill } from "react-icons/ri";
 
-const JOBS = [
+const EXPERIENCES = [
+  {
+    title: "FIAP",
+    role: "Bachelor's Degree in Software Engineering",
+    timeRange: "Aug. 2022 - 2026",
+    image: FIAPImage.src,
+    website: "https://www.fiap.com.br/",
+    techs: [
+      <BiLogoTypescript className="size-8" />,
+      <GrMysql className="size-8" />,
+      <RiNextjsFill className="size-8" />,
+      <FaReact className="size-8" />,
+      <FaJava className="size-8" />,
+    ],
+    description: `I am currently studying at FIAP. Learning about Software Engineering, best market practices and actively engaging in new projects utilizing different learnt concepts and technologies.`,
+  },
   {
     title: "Stays",
     role: "Software Developer",
+    timeRange: "Sep 2022 - Present",
     image: staysImage.src,
     website: "https://stays.net/",
     techs: [
-      <SiMongodb className="size-8" />,
       <RiJavascriptFill className="size-8" />,
+      <SiMongodb className="size-8" />,
+      <SiNginx className="size-8" />,
+      <SiJest className="size-7" />,
     ],
-    description: `Developing features used by thousands in the vacation rental industry.
-Helped integrate a big new feature of the application: Google Vacation Rental. This tool enables our clients to connect their apartments with google, and I lead the core development of this project.
-Full working experience in English - The team has members of different countries, and so, I have received great compliments on my fluency and communication.
-Full git and Gitlab issue development pipeline alongside Jira - We use Agile methodology with weekly meetings to plan each sprint and reflect on the issues.
-Became scrum master for our sprints, where I make sure ongoing projects are going according to plan`,
+    description: `Developing features used by thousands in the vacation rental industry. Dealing with heavy backend logic by integrating Airbnb, Bookingcom, Decolar and other OTAs' (Online travel agencies) APIs and webhooks. 
+Full git and Github issue development pipeline alongside Jira - We use Agile methodology with weekly meetings to plan each sprint and reflect on the issues.
+Acted as a scrum master for our sprints, where I make sure ongoing projects are going according to plan.`,
   },
   {
     title: "Intemobile",
     role: "Junior Developer",
+    timeRange: "Jun 2021 - Aug 2022",
     image: intemobileImage.src,
     website: "https://intemobile.com/",
     techs: [
@@ -39,26 +58,25 @@ Became scrum master for our sprints, where I make sure ongoing projects are goin
       <FaDatabase className="size-6" />,
       <FaBootstrap className="size-8" />,
     ],
-    description: `Created software and solutions for integrating mobile
+    description: `Created software solutions for integrating mobile
 technologies, such as asset management solutions and
 cargo/logistics transport visualizations. I developed web
-applications, Android apps, back-end and front-end services using
-several technologies including: Azure, .NET, C#, SQL Server,
-JavaScript/Typescript and Angular.
+applications, helped in maintaining Android apps, and implemented full back-end to front-end services using
+several technologies including Azure, .NET, C#, SQL Server and Typescript.
 `,
   },
 ];
 
-import { DynamicArrow } from "./dynamic-arrow";
-import { MagicCard } from "../ui/magic-card";
 import { useColor } from "../atoms";
+import { MagicCard } from "../ui/magic-card";
+import { DynamicArrow } from "./dynamic-arrow";
 
 export function ExperienceCards() {
   const { color } = useColor();
   return (
-    <div className="flex gap-4">
-      {JOBS.map((job) => (
-        <a className="group w-2/4" href={job.website} target="_blank">
+    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+      {EXPERIENCES.map((job) => (
+        <a className="group" href={job.website} target="_blank">
           <MagicCard
             key={job.title}
             className="pt-4"
@@ -74,7 +92,8 @@ export function ExperienceCards() {
               </div>
               <div className="mt-4">
                 <CardTitle className="text-xl">{job.role}</CardTitle>
-                <div className="flex items-center gap-2">{job.techs}</div>
+                <p className="text-sm italic">{job.timeRange}</p>
+                <div className="mt-4 flex items-center gap-2">{job.techs}</div>
                 <CardDescription className="text-md mt-4">
                   {job.description}
                 </CardDescription>

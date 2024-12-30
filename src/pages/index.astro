@@ -12,6 +12,7 @@ import "~/styles/global.css";
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import { Cal } from "~/components/react/cal";
 ---
 
 <!doctype html>
@@ -67,27 +68,31 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
         <div class="mt-16">
           <DevLogos client:only />
         </div>
-        <div class="flex">
-          <Button
-            variant={"blurred"}
-            size={"lg"}
-            className="mr-4 select-none rounded-xl">About</Button
-          >
-          <Button
-            variant={"blurred"}
-            size={"lg"}
-            className="mr-4 select-none rounded-xl">Experience</Button
+        <div class="flex gap-4">
+          <a
+            href="#about"
+            class={cn(
+              buttonVariants({ variant: "blurred", size: "lg" }),
+              "rounded-xl select-none",
+            )}>About</a
           >
           <a
-            href="https://cal.com/gabriel-bianchi"
+            href="#experience"
             class={cn(
               buttonVariants({ variant: "blurred", size: "lg" }),
               "rounded-xl select-none",
             )}>Experience</a
           >
+          <a
+            href="#contact-me"
+            class={cn(
+              buttonVariants({ variant: "blurred", size: "lg" }),
+              "rounded-xl select-none",
+            )}>Contact me</a
+          >
         </div>
       </section>
-      <section class="py-64 text-gray-50/60">
+      <section class="mt-56 pt-24 text-gray-50/60" id="about">
         <FadeIntoViewDiv
           client:load
           className="flex flex-col items-center gap-4"
@@ -104,7 +109,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
           <p>Let's build something together!</p>
         </FadeIntoViewDiv>
       </section>
-      <section class="text-gray-50/60">
+      <section class="mt-56 pt-24 text-gray-50/60" id="experience">
         <FadeIntoViewDiv
           client:load
           className="flex flex-col items-center gap-4"
@@ -114,6 +119,26 @@ import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
           </h2>
           <div>
             <ExperienceCards client:only />
+          </div>
+        </FadeIntoViewDiv>
+      </section>
+      <section class="mt-56 pt-24 text-gray-50/60" id="contact-me">
+        <FadeIntoViewDiv
+          client:load
+          className="flex flex-col items-center gap-4"
+        >
+          <h2 class="font-mono text-3xl tracking-[8px] text-gray-50/50">
+            CONTACT ME
+          </h2>
+          <p class="text-2xl">Want to chat? Book my calendar!</p>
+          <p class="text-xl">
+            Or <a
+              href="mailto:gdbianchii@gmail.com"
+              class="italic text-slate-400 underline">send me an email</a
+            >
+          </p>
+          <div class="w-full">
+            <Cal client:load />
           </div>
         </FadeIntoViewDiv>
       </section>
