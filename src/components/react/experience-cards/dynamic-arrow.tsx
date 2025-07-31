@@ -1,7 +1,5 @@
-import { use, useEffect } from "react";
 import { MdArrowOutward } from "react-icons/md";
 import { useColor } from "../atoms";
-import { hslToHex } from "~/lib/utils";
 
 export function DynamicArrow() {
   const { color } = useColor();
