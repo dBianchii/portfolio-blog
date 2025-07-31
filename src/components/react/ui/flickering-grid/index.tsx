@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useColor } from "../../atoms";
 import { usePopSounds } from "./use-pop-sound";
@@ -105,7 +99,7 @@ function FlickeringGrid({
 
       return { cols, rows, squares, dpr };
     },
-    [squareSize, gridGap, maxOpacity],
+    [squareSize, gridGap, maxOpacity, secondaryChance]
   );
 
   const updateSquares = useCallback(
@@ -118,7 +112,7 @@ function FlickeringGrid({
         }
       }
     },
-    [flickerChance, maxOpacity],
+    [flickerChance, maxOpacity, secondaryChance]
   );
 
   const drawGrid = useCallback(
@@ -129,7 +123,7 @@ function FlickeringGrid({
       cols: number,
       rows: number,
       squares: Float32Array,
-      dpr: number,
+      dpr: number
     ) => {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = "transparent";
@@ -142,7 +136,7 @@ function FlickeringGrid({
           ctx.fillStyle = `${squares[index] < 0 ? secondaryColorRef.current : memoizedColor}${opacity})`;
 
           const foundSquare = hoveredSquareTrail.current?.find(
-            (square) => square.index === index,
+            (square) => square.index === index
           );
 
           if (foundSquare) {
@@ -150,7 +144,7 @@ function FlickeringGrid({
           }
 
           const clickedSquare = clickedSquaresRef.current.find(
-            (square) => square.index === index,
+            (square) => square.index === index
           );
 
           if (clickedSquare) {
@@ -169,37 +163,38 @@ function FlickeringGrid({
             y - (currentSquareSize * dpr) / 2,
             x + (currentSquareSize * dpr) / 2,
             y + (currentSquareSize * dpr) / 2,
-            radius,
+            radius
           );
           ctx.arcTo(
             x + (currentSquareSize * dpr) / 2,
             y + (currentSquareSize * dpr) / 2,
             x - (currentSquareSize * dpr) / 2,
             y + (currentSquareSize * dpr) / 2,
-            radius,
+            radius
           );
           ctx.arcTo(
             x - (currentSquareSize * dpr) / 2,
             y + (currentSquareSize * dpr) / 2,
             x - (currentSquareSize * dpr) / 2,
             y - (currentSquareSize * dpr) / 2,
-            radius,
+            radius
           );
           ctx.arcTo(
             x - (currentSquareSize * dpr) / 2,
             y - (currentSquareSize * dpr) / 2,
             x + (currentSquareSize * dpr) / 2,
             y - (currentSquareSize * dpr) / 2,
-            radius,
+            radius
           );
           ctx.closePath();
           ctx.fill();
         }
       }
     },
-    [memoizedColor, secondaryColorRef, squareSize, gridGap],
+    [memoizedColor, secondaryColorRef, squareSize, gridGap]
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <who cares>
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -245,10 +240,10 @@ function FlickeringGrid({
             (trail) => ({
               index: trail.index,
               opacity: trail.opacity - 0.05,
-            }),
+            })
           );
           hoveredSquareTrail.current = hoveredSquareTrail.current.filter(
-            (trail) => trail.opacity > 0,
+            (trail) => trail.opacity > 0
           );
         }
       }
@@ -261,7 +256,7 @@ function FlickeringGrid({
         gridParams.cols,
         gridParams.rows,
         gridParams.squares,
-        gridParams.dpr,
+        gridParams.dpr
       );
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -276,7 +271,7 @@ function FlickeringGrid({
       ([entry]) => {
         setIsInView(entry.isIntersecting);
       },
-      { threshold: 0 },
+      { threshold: 0 }
     );
 
     intersectionObserver.observe(canvas);
@@ -333,7 +328,17 @@ function FlickeringGrid({
       canvas.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [setupCanvas, updateSquares, drawGrid, width, height, isInView]);
+  }, [
+    setupCanvas,
+    updateSquares,
+    drawGrid,
+    width,
+    height,
+    isInView,
+    squareSize,
+    gridGap,
+    maxOpacity,
+  ]);
 
   return (
     <div

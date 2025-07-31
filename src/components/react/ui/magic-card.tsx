@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useMotionTemplate, useMotionValue } from "motion/react";
-import React, { useCallback, useEffect, useRef } from "react";
+import type React from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { cn } from "~/lib/utils";
 
@@ -36,7 +37,7 @@ export function MagicCard({
         mouseY.set(clientY - top);
       }
     },
-    [mouseX, mouseY],
+    [mouseX, mouseY]
   );
 
   const handleMouseOut = useCallback(
@@ -47,7 +48,7 @@ export function MagicCard({
         mouseY.set(-gradientSize);
       }
     },
-    [handleMouseMove, mouseX, gradientSize, mouseY],
+    [handleMouseMove, mouseX, gradientSize, mouseY]
   );
 
   const handleMouseEnter = useCallback(() => {
@@ -74,10 +75,7 @@ export function MagicCard({
   }, [gradientSize, mouseX, mouseY]);
 
   return (
-    <div
-      ref={cardRef}
-      className={cn("group relative flex size-full rounded-xl", className)}
-    >
+    <div ref={cardRef} className={cn("group relative flex size-full rounded-xl", className)}>
       <div className="absolute inset-px z-10 rounded-xl bg-neutral-100 dark:bg-neutral-900" />
       <div className="relative z-30">{children}</div>
       <motion.div

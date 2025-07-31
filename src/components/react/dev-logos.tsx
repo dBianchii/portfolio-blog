@@ -1,13 +1,8 @@
-import {
-  BiLogoReact,
-  BiLogoTailwindCss,
-  BiLogoTypescript,
-} from "react-icons/bi";
+import { useMediaQuery } from "@uidotdev/usehooks";
+import { BiLogoReact, BiLogoTailwindCss, BiLogoTypescript } from "react-icons/bi";
 import { GrMysql } from "react-icons/gr";
 import { RiNextjsFill } from "react-icons/ri";
 import { SiDrizzle, SiTurborepo } from "react-icons/si";
-
-import { useMediaQuery } from "@uidotdev/usehooks";
 import {
   Tooltip,
   TooltipContent,
@@ -54,8 +49,6 @@ const logos = [
   },
 ];
 
-const useHook = (enabled: boolean) => {};
-
 export function DevLogos() {
   const isSmallDevice = useMediaQuery("only screen and (max-width : 768px)");
   const size = isSmallDevice ? 40 : 60;
@@ -71,8 +64,8 @@ export function DevLogos() {
             iconDistance={20}
             iconSize={size}
           >
-            {logos.map(({ Component, name: name, href }, i) => (
-              <DockIcon key={name + i}>
+            {logos.map(({ Component, name, href }) => (
+              <DockIcon key={`devlogo-${name}`}>
                 <Tooltip delayDuration={50}>
                   <TooltipTrigger
                     asChild

@@ -3,7 +3,7 @@
 import { forwardRef, useMemo } from "react";
 import { HexColorPicker } from "react-colorful";
 import { useForwardedRef } from "~/lib/use-forwarded-ref";
-import { type ButtonProps } from "./button";
+import type { ButtonProps } from "./button";
 import { Input } from "./input";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
@@ -20,18 +20,8 @@ const ColorPicker = forwardRef<
   Omit<ButtonProps, "value" | "onChange" | "onBlur"> & ColorPickerProps
 >(
   (
-    {
-      disabled,
-      value,
-      onChange,
-      onBlur,
-      name,
-      className,
-      open,
-      setOpen,
-      ...props
-    },
-    forwardedRef,
+    { disabled, value, onChange, onBlur, name, className, open, setOpen, ..._props },
+    forwardedRef
   ) => {
     const ref = useForwardedRef(forwardedRef);
 
@@ -55,7 +45,7 @@ const ColorPicker = forwardRef<
         </PopoverContent>
       </Popover>
     );
-  },
+  }
 );
 ColorPicker.displayName = "ColorPicker";
 

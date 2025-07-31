@@ -1,4 +1,4 @@
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const hslToHex = (hsl: string) => {
-  const [h, s, l] = hsl.match(/\d+/g)!.map(Number);
+  const [h, s, l] = hsl.match(/\d+/g)?.map(Number) ?? [0, 0, 0];
   const a = (s * Math.min(l, 100 - l)) / 100;
   const f = (n: number) => {
     const k = (n + h / 30) % 12;
@@ -19,7 +19,7 @@ export const hslToHex = (hsl: string) => {
 };
 
 export const changeHslHueByAmount = (hsl: string, amount: number) => {
-  const [h, s, l] = hsl.match(/\d+/g)!.map(Number);
+  const [h, s, l] = hsl.match(/\d+/g)?.map(Number) ?? [0, 0, 0];
   const newHue = (h + amount) % 360;
   return `hsl(${newHue}, ${s}%, ${l}%)`;
 };

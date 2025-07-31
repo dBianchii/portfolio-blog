@@ -1,14 +1,9 @@
 import { useAtom } from "jotai/react";
 import { atomWithStorage } from "jotai/utils";
 
-export const colorBrightnessPercentAtom = atomWithStorage(
-  "dialValue",
-  77,
-  undefined,
-  {
-    getOnInit: true,
-  },
-);
+export const colorBrightnessPercentAtom = atomWithStorage("dialValue", 77, undefined, {
+  getOnInit: true,
+});
 
 const HUES = [0, 60, 120, 180, 240, 300];
 
